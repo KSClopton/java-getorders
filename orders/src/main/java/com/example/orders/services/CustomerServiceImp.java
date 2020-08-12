@@ -1,5 +1,6 @@
 package com.example.orders.services;
 
+import com.example.orders.OrderCounts;
 import com.example.orders.models.Customer;
 import com.example.orders.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service(value = "customerServices")
-public class CustomerServiceImp implements CustomerService{
+public class CustomerServiceImp implements CustomerService {
     @Autowired
     CustomerRepository custrepos;
 
     @Override
-    public Customer save(Customer customer){
+    public Customer save(Customer customer) {
         return custrepos.save(customer);
     }
 
@@ -30,5 +31,17 @@ public class CustomerServiceImp implements CustomerService{
     public Customer findCustomerById(long id) {
         return custrepos.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer " + id + " Not Found!"));
+    }
+
+    @Override
+    public List<Customer> findByCustname(String custname) {
+        return custrepos.findByCustnameContainingIgnoringCase(custname);
+    }
+
+    @Override
+    public List<OrderCounts> getOrderCount() {
+        List<OrderCounts> list = custrepos.findOrderCounts();
+//        return null;
+        return list;
     }
 }

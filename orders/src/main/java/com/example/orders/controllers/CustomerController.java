@@ -1,5 +1,6 @@
 package com.example.orders.controllers;
 
+import com.example.orders.OrderCounts;
 import com.example.orders.models.Customer;
 import com.example.orders.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,23 @@ public class CustomerController {
         return new ResponseEntity<>(myList, HttpStatus.OK);
     }
     // http://localhost:2019/customers/customer/id - returns the customer and their orders with the given customer id
-    @GetMapping(value = "customers/{customerid}", produces = "application/json")
+    @GetMapping(value = "/customer/{customerid}", produces = "application/json")
     public ResponseEntity<?> findCustomerById(@PathVariable long customerid){
         Customer myCustomer = customerServices.findCustomerById(customerid);
         return new ResponseEntity<>(myCustomer, HttpStatus.OK);
     }
 
     // http://localhost:2019/customers/namelike -returns all customers and their orders with a customer name containing the given substring
-//    @GetMapping(value = "customers/" , produces = "application/json)
-    // http://localhost:2019/customers/orders/count - using a query return a list of all customers with the number or orders they have placed.
+    @GetMapping(value = "/{namelike}", produces = "application/json")
+    public ResponseEntity<?> findCustomersByNameLike(@PathVariable String custname){
+        List<Customer> myList = customerServices.findByCustname(custname);
+        return new ResponseEntity<>(myList, HttpStatus.OK);
+    }
 
+    // http://localhost:2019/customers/orders/count - using a query return a list of all customers with the number of orders they have placed.
+    @GetMapping(value = "/orders/count", produces = "application/json")
+    public ResponseEntity<?> getOrderCount(){
+        List<OrderCounts> myList = customerServices.getOrderCount();
+        return new ResponseEntity<>(myList, HttpStatus.OK);
+    }
 }
